@@ -1,0 +1,769 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PaperBoy — мем-токен на TON</title>
+  <meta name="description" content="PaperBoy — чистый мем-токен на TON с честным запуском, сильным комьюнити и 100% токеномикой сообщества." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper: #fff7df;
+      --paper-2: #f7e5bd;
+      --ink: #172039;
+      --muted: #68728b;
+      --blue: #1277ff;
+      --blue-dark: #092b80;
+      --cyan: #61d9ff;
+      --orange: #ff9f2e;
+      --yellow: #ffd84d;
+      --green: #79e28a;
+      --white: #ffffff;
+      --line: rgba(23, 32, 57, 0.12);
+      --shadow: 0 24px 70px rgba(7, 32, 91, 0.18);
+      --radius-lg: 28px;
+      --radius-md: 20px;
+      --max: 1160px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: Manrope, Verdana, sans-serif;
+      background:
+        radial-gradient(circle at 10% 8%, rgba(97, 217, 255, 0.75), transparent 22rem),
+        radial-gradient(circle at 86% 10%, rgba(255, 216, 77, 0.58), transparent 24rem),
+        linear-gradient(180deg, #eaf8ff 0%, #fff9ea 44%, #f5fbff 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      opacity: 0.45;
+      background-image:
+        linear-gradient(rgba(9, 43, 128, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(9, 43, 128, 0.08) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(180deg, #000 0%, transparent 85%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    .container { width: min(var(--max), calc(100% - 40px)); margin: 0 auto; }
+
+    .topbar {
+      position: sticky;
+      top: 14px;
+      z-index: 20;
+      width: min(var(--max), calc(100% - 28px));
+      margin: 14px auto 0;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.62);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: 0 18px 45px rgba(9, 43, 128, 0.12);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      min-width: max-content;
+      font-family: Unbounded, Manrope, sans-serif;
+      font-weight: 800;
+      letter-spacing: -0.05em;
+    }
+
+    .brand-mark {
+      width: 48px;
+      height: 48px;
+      padding: 3px;
+      border: 2px solid rgba(23, 32, 57, 0.12);
+      border-radius: 16px;
+      background: var(--white);
+      box-shadow: 0 8px 0 rgba(23, 32, 57, 0.08);
+      overflow: hidden;
+    }
+
+    .brand-mark img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+    .brand span:last-child { font-size: 21px; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      color: rgba(23, 32, 57, 0.74);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .nav-links a { transition: color 0.2s ease; }
+    .nav-links a:hover { color: var(--blue); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 0 22px;
+      border: 0;
+      border-radius: 999px;
+      font-weight: 900;
+      line-height: 1;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      white-space: nowrap;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary {
+      color: #101729;
+      background: linear-gradient(180deg, var(--yellow), var(--orange));
+      box-shadow: 0 10px 0 rgba(137, 78, 0, 0.18), 0 18px 34px rgba(255, 159, 46, 0.28);
+    }
+
+    .btn-dark {
+      color: var(--white);
+      background: #121a2d;
+      box-shadow: 0 16px 30px rgba(18, 26, 45, 0.22);
+    }
+
+    .btn-light {
+      color: var(--ink);
+      border: 1px solid rgba(23, 32, 57, 0.14);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .hero { position: relative; padding: 86px 0 56px; }
+    .hero::after {
+      content: "PAPER DELIVERY";
+      position: absolute;
+      left: 50%;
+      top: 118px;
+      z-index: -1;
+      transform: translateX(-50%) rotate(-3deg);
+      color: rgba(18, 119, 255, 0.08);
+      font-family: Unbounded, Manrope, sans-serif;
+      font-size: clamp(54px, 13vw, 184px);
+      font-weight: 800;
+      letter-spacing: -0.08em;
+      white-space: nowrap;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.82fr);
+      gap: 54px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      width: fit-content;
+      margin-bottom: 20px;
+      padding: 10px 14px;
+      border: 1px solid rgba(18, 119, 255, 0.18);
+      border-radius: 999px;
+      color: var(--blue-dark);
+      background: rgba(255, 255, 255, 0.64);
+      font-weight: 900;
+      box-shadow: 0 10px 30px rgba(18, 119, 255, 0.08);
+    }
+
+    h1, h2, h3 { margin: 0; font-family: Unbounded, Manrope, sans-serif; letter-spacing: -0.065em; }
+    h1 {
+      max-width: 760px;
+      font-size: clamp(48px, 7vw, 92px);
+      line-height: 0.95;
+    }
+
+    .highlight {
+      display: inline-block;
+      padding: 0 0.1em 0.08em;
+      border-radius: 0.18em;
+      background: linear-gradient(180deg, transparent 44%, rgba(255, 216, 77, 0.9) 44%);
+    }
+
+    .hero-copy {
+      max-width: 650px;
+      margin: 24px 0 0;
+      color: #46516d;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.65;
+    }
+
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
+
+    .contract {
+      max-width: 690px;
+      margin-top: 24px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px dashed rgba(18, 119, 255, 0.35);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: 0 14px 40px rgba(9, 43, 128, 0.08);
+    }
+
+    .contract code {
+      flex: 1;
+      padding-left: 8px;
+      color: #2f3c5d;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 13px;
+      font-weight: 800;
+      overflow-wrap: anywhere;
+    }
+
+    .copy-btn { min-height: 42px; padding: 0 15px; font-size: 13px; }
+
+    .hero-card {
+      position: relative;
+      min-height: 520px;
+      display: grid;
+      place-items: center;
+    }
+
+    .stamp {
+      position: absolute;
+      padding: 13px 16px;
+      border: 2px solid rgba(23, 32, 57, 0.12);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.84);
+      box-shadow: 0 18px 40px rgba(9, 43, 128, 0.14);
+      font-family: Unbounded, Manrope, sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .stamp-one { left: 0; top: 54px; transform: rotate(-7deg); }
+    .stamp-two { right: 4px; bottom: 86px; transform: rotate(6deg); }
+
+    .logo-orbit {
+      position: relative;
+      width: min(410px, 84vw);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border-radius: 44px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(255, 247, 223, 0.82)),
+        radial-gradient(circle at 50% 44%, rgba(97, 217, 255, 0.55), transparent 52%);
+      box-shadow: var(--shadow), inset 0 0 0 1px rgba(255, 255, 255, 0.72);
+      transform: rotate(2deg);
+    }
+
+    .logo-orbit::before, .logo-orbit::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      border: 2px solid rgba(18, 119, 255, 0.16);
+    }
+
+    .logo-orbit::before { inset: 32px; }
+    .logo-orbit::after { inset: 70px; border-color: rgba(255, 159, 46, 0.28); }
+
+    .hero-logo {
+      position: relative;
+      z-index: 1;
+      width: 70%;
+      aspect-ratio: 1;
+      padding: 10px;
+      border-radius: 36px;
+      background: var(--white);
+      box-shadow: 0 22px 0 rgba(23, 32, 57, 0.08), 0 34px 70px rgba(9, 43, 128, 0.2);
+      overflow: hidden;
+      animation: float 5s ease-in-out infinite;
+    }
+
+    .hero-logo img { width: 100%; height: 100%; object-fit: cover; border-radius: 28px; }
+
+    .ticker-row {
+      margin-top: 34px;
+      padding: 16px 0;
+      overflow: hidden;
+      border-block: 1px solid rgba(23, 32, 57, 0.1);
+      background: rgba(255, 255, 255, 0.48);
+    }
+
+    .ticker-track {
+      display: flex;
+      width: max-content;
+      animation: marquee 22s linear infinite;
+    }
+
+    .ticker-track span {
+      padding: 0 26px;
+      color: var(--blue-dark);
+      font-family: Unbounded, Manrope, sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      white-space: nowrap;
+    }
+
+    .section { padding: 52px 0; }
+    .section-head { max-width: 720px; margin-bottom: 26px; }
+    .kicker {
+      margin-bottom: 10px;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h2 { font-size: clamp(34px, 5vw, 58px); line-height: 1; }
+    .section-head p {
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.65;
+    }
+
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .card {
+      position: relative;
+      border: 1px solid rgba(23, 32, 57, 0.1);
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: 0 18px 50px rgba(9, 43, 128, 0.1);
+      overflow: hidden;
+    }
+
+    .feature-card { min-height: 280px; padding: 28px; }
+    .feature-card::after {
+      content: "";
+      position: absolute;
+      right: -42px;
+      bottom: -42px;
+      width: 150px;
+      height: 150px;
+      border-radius: 44px;
+      background: rgba(255, 216, 77, 0.34);
+      transform: rotate(18deg);
+    }
+
+    .icon {
+      width: 62px;
+      height: 62px;
+      margin-bottom: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 20px;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      box-shadow: 0 12px 0 rgba(18, 119, 255, 0.16);
+      font-family: Unbounded, Manrope, sans-serif;
+      font-weight: 800;
+    }
+
+    h3 { font-size: 25px; line-height: 1.08; }
+    .card p { margin: 14px 0 0; color: var(--muted); font-weight: 700; line-height: 1.65; }
+
+    .token-panel {
+      padding: 34px;
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 24px;
+      background: #101a32;
+      color: var(--white);
+    }
+
+    .token-visual {
+      min-height: 390px;
+      display: grid;
+      place-items: center;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 38% 32%, rgba(97, 217, 255, 0.42), transparent 28%),
+        linear-gradient(135deg, #153a91, #0a1731);
+      overflow: hidden;
+    }
+
+    .big-percent {
+      font-family: Unbounded, Manrope, sans-serif;
+      font-size: clamp(92px, 13vw, 180px);
+      font-weight: 800;
+      line-height: 0.85;
+      letter-spacing: -0.1em;
+      text-shadow: 0 18px 0 rgba(0, 0, 0, 0.12);
+    }
+
+    .token-copy { padding: 8px 6px; align-self: center; }
+    .token-copy .kicker { color: var(--yellow); }
+    .token-copy p { color: rgba(255, 255, 255, 0.72); }
+    .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+    .chips span {
+      padding: 11px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+      color: rgba(255, 255, 255, 0.88);
+      background: rgba(255, 255, 255, 0.08);
+      font-weight: 900;
+    }
+
+    .road-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .road-card { padding: 24px; background: rgba(255, 255, 255, 0.76); }
+    .step {
+      width: 46px;
+      height: 46px;
+      margin-bottom: 20px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--ink);
+      background: var(--yellow);
+      font-family: Unbounded, Manrope, sans-serif;
+      font-weight: 800;
+    }
+
+    .community {
+      padding: 34px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: center;
+      color: var(--white);
+      background:
+        radial-gradient(circle at 85% 20%, rgba(255, 216, 77, 0.28), transparent 18rem),
+        linear-gradient(135deg, #1277ff, #092b80 78%);
+    }
+
+    .community p { max-width: 680px; color: rgba(255, 255, 255, 0.78); }
+    .community-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end; }
+
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .info-card { padding: 26px; background: rgba(255, 255, 255, 0.76); }
+    .info-card a { color: var(--blue-dark); font-weight: 900; }
+    .info-card dl { margin: 0; display: grid; gap: 14px; }
+    .info-card div { display: grid; gap: 5px; }
+    .info-card dt { color: var(--muted); font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; }
+    .info-card dd { margin: 0; font-weight: 800; overflow-wrap: anywhere; }
+
+    .footer {
+      margin-top: 36px;
+      padding: 34px 0;
+      color: rgba(255, 255, 255, 0.72);
+      background: #0b1224;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .footer .brand { color: var(--white); }
+    .footer p { max-width: 680px; margin: 14px 0 0; font-weight: 700; line-height: 1.65; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 14px; justify-content: flex-end; font-weight: 900; }
+    .footer small { display: block; margin-top: 24px; color: rgba(255, 255, 255, 0.52); font-weight: 700; }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 40;
+      padding: 14px 18px;
+      border-radius: 16px;
+      color: var(--white);
+      background: #121a2d;
+      box-shadow: 0 20px 50px rgba(18, 26, 45, 0.28);
+      font-weight: 900;
+      opacity: 0;
+      transform: translateY(16px);
+      pointer-events: none;
+      transition: 0.22s ease;
+    }
+
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50% { transform: translateY(-16px) rotate(2deg); }
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+    }
+
+    @media (max-width: 980px) {
+      .nav-links { display: none; }
+      .hero { padding-top: 62px; }
+      .hero-grid, .token-panel, .community, .info-grid { grid-template-columns: 1fr; }
+      .hero-content { text-align: center; }
+      .eyebrow, .contract { margin-left: auto; margin-right: auto; }
+      .hero-actions, .community-actions { justify-content: center; }
+      .hero-card { min-height: 420px; }
+      .feature-grid, .road-grid { grid-template-columns: repeat(2, 1fr); }
+      .community { text-align: center; }
+      .footer-grid { grid-template-columns: 1fr; text-align: center; }
+      .footer .brand { justify-content: center; }
+      .footer p { margin-left: auto; margin-right: auto; }
+      .footer-links { justify-content: center; }
+    }
+
+    @media (max-width: 640px) {
+      .container { width: min(100% - 24px, var(--max)); }
+      .topbar { top: 8px; width: calc(100% - 16px); border-radius: 20px; }
+      .brand-mark { width: 42px; height: 42px; border-radius: 14px; }
+      .brand span:last-child { font-size: 17px; }
+      .topbar .btn { min-height: 42px; padding: 0 14px; font-size: 13px; }
+      .hero { padding: 44px 0 34px; }
+      h1 { font-size: clamp(42px, 13vw, 58px); }
+      .hero-copy { font-size: 17px; }
+      .hero-actions .btn, .community-actions .btn { width: 100%; }
+      .contract { align-items: stretch; flex-direction: column; text-align: left; }
+      .contract code { padding: 4px; }
+      .copy-btn { width: 100%; }
+      .hero-card { min-height: 350px; }
+      .stamp { font-size: 11px; }
+      .stamp-one { left: 4px; top: 20px; }
+      .stamp-two { right: 0; bottom: 44px; }
+      .section { padding: 38px 0; }
+      .feature-grid, .road-grid { grid-template-columns: 1fr; }
+      .feature-card, .token-panel, .community, .info-card { padding: 22px; }
+      .token-visual { min-height: 260px; }
+      .ticker-track span { padding: 0 18px; font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="PaperBoy">
+      <span class="brand-mark"><img src="logo.png" alt="Логотип PaperBoy" /></span>
+      <span>PaperBoy</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Основная навигация">
+      <a href="#about">О проекте</a>
+      <a href="#tokenomics">Токеномика</a>
+      <a href="#roadmap">Маршрут</a>
+      <a href="#community">Комьюнити</a>
+    </nav>
+
+    <a class="btn btn-primary" href="https://t.me/dtrade?start=timofei_EQCXryDnM7I2xqWoM-Kkzr7vLv1bXzwZkYe1L9JtoORJm55N" target="_blank" rel="noopener">Купить $PAPER</a>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <div class="eyebrow">Мем-доставка свежих вайбов в TON</div>
+          <h1>Самый чистый мем-токен <span class="highlight">на TON</span></h1>
+          <p class="hero-copy">PaperBoy собирает PAPER BOY COMMUNITY вокруг простого обещания: честный запуск, прозрачная токеномика и мем, который хочется держать даже paper hands.</p>
+
+          <div class="hero-actions" id="buy">
+            <a class="btn btn-primary" href="https://t.me/dtrade?start=timofei_EQCXryDnM7I2xqWoM-Kkzr7vLv1bXzwZkYe1L9JtoORJm55N" target="_blank" rel="noopener">Купить $PAPER</a>
+            <a class="btn btn-dark" href="https://t.me/paperboy_ton" target="_blank" rel="noopener">Вступить в Telegram</a>
+          </div>
+
+          <div class="contract" aria-label="Контракт токена">
+            <code id="contractText">EQCXryDnM7I2xqWoM-Kkzr7vLv1bXzwZkYe1L9JtoORJm55N</code>
+            <button class="btn btn-dark copy-btn" id="copyContract" type="button">Скопировать</button>
+          </div>
+        </div>
+
+        <div class="hero-card" aria-label="Визуал PaperBoy">
+          <div class="stamp stamp-one">100% community</div>
+          <div class="logo-orbit">
+            <div class="hero-logo"><img src="logo.png" alt="PaperBoy mascot" /></div>
+          </div>
+          <div class="stamp stamp-two">$PAPER on TON</div>
+        </div>
+      </div>
+
+      <div class="ticker-row" aria-hidden="true">
+        <div class="ticker-track">
+          <span>Честный запуск</span><span>Без пресейла</span><span>Без командного кошелька</span><span>PaperBoy на TON</span><span>Diamond hands community</span>
+          <span>Честный запуск</span><span>Без пресейла</span><span>Без командного кошелька</span><span>PaperBoy на TON</span><span>Diamond hands community</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="container">
+        <div class="section-head">
+          <div class="kicker">О проекте</div>
+          <h2>Не просто мем. Маленькая газета большого комьюнити.</h2>
+          <p>Визуал, тон и механика страницы собраны вокруг идеи доставки: PaperBoy приносит новости, мемы и энергию участникам TON-экосистемы.</p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="card feature-card">
+            <div class="icon">01</div>
+            <h3>Комьюнити в центре</h3>
+            <p>PaperBoy строится вокруг людей: мемов, обсуждений, органического роста и общей культуры проекта.</p>
+          </article>
+          <article class="card feature-card">
+            <div class="icon">02</div>
+            <h3>Ясный и честный старт</h3>
+            <p>Без сложной легенды и скрытых условий: чистая идея, понятный контракт и открытая коммуникация.</p>
+          </article>
+          <article class="card feature-card">
+            <div class="icon">03</div>
+            <h3>Запоминаемый образ</h3>
+            <p>PaperBoy легко упаковывается в стикеры, мемы, посты и кампании, а значит может жить в ленте каждый день.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="tokenomics">
+      <div class="container">
+        <article class="card token-panel">
+          <div class="token-visual"><div class="big-percent">100%</div></div>
+          <div class="token-copy">
+            <div class="kicker">Токеномика</div>
+            <h2>Весь supply для сообщества.</h2>
+            <p>Общий объем: <strong>100 000 000 $PAPER</strong>. Концепт токеномики простой: без пресейла, без кошелька команды и без скрытых аллокаций.</p>
+            <div class="chips">
+              <span>Fair launch</span>
+              <span>No presale</span>
+              <span>No team wallet</span>
+              <span>TON ecosystem</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="roadmap">
+      <div class="container">
+        <div class="section-head">
+          <div class="kicker">Дорожная карта</div>
+          <h2>Маршрут доставки.</h2>
+        </div>
+
+        <div class="road-grid">
+          <article class="card road-card">
+            <div class="step">1</div>
+            <h3>Запуск</h3>
+            <p>Публикация сайта, оформление каналов, первые держатели и стартовый мем-пак.</p>
+          </article>
+          <article class="card road-card">
+            <div class="step">2</div>
+            <h3>Рост</h3>
+            <p>Активное комьюнити, партнерства, регулярные инфоповоды и расширение узнаваемости.</p>
+          </article>
+          <article class="card road-card">
+            <div class="step">3</div>
+            <h3>Охват</h3>
+            <p>Листинги, коллаборации, мем-кампании и новые визуальные форматы PaperBoy.</p>
+          </article>
+          <article class="card road-card">
+            <div class="step">4</div>
+            <h3>Луна</h3>
+            <p>Глобальное присутствие в TON и сильная культура вокруг $PAPER.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="community">
+      <div class="container">
+        <article class="card community">
+          <div>
+            <div class="kicker">Сообщество</div>
+            <h2>Заходи в PAPER.</h2>
+            <p>Следи за новостями, забирай стикеры и подключайся к PAPER BOY COMMUNITY. Чем больше шума, тем дальше летит газета.</p>
+          </div>
+          <div class="community-actions">
+            <a class="btn btn-primary" href="https://t.me/dtrade?start=timofei_EQCXryDnM7I2xqWoM-Kkzr7vLv1bXzwZkYe1L9JtoORJm55N" target="_blank" rel="noopener">Купить $PAPER</a>
+            <a class="btn btn-light" href="https://t.me/paperboy_ton" target="_blank" rel="noopener">Telegram</a>
+            <a class="btn btn-light" href="https://x.com/paperboyton" target="_blank" rel="noopener">X / Twitter</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="info">
+      <div class="container info-grid">
+        <article class="card info-card">
+          <h3>Официальные ссылки</h3>
+          <dl>
+            <div><dt>Telegram</dt><dd><a href="https://t.me/paperboy_ton" target="_blank" rel="noopener">@paperboy_ton</a></dd></div>
+            <div><dt>Sticker pack</dt><dd><a href="https://t.me/addstickers/ToiletPaperBoy" target="_blank" rel="noopener">ToiletPaperBoy</a></dd></div>
+            <div><dt>X</dt><dd><a href="https://x.com/paperboyton" target="_blank" rel="noopener">@paperboyton</a></dd></div>
+          </dl>
+        </article>
+        <article class="card info-card">
+          <h3>Данные токена</h3>
+          <dl>
+            <div><dt>Тикер</dt><dd>$PAPER</dd></div>
+            <div><dt>Сеть</dt><dd>TON</dd></div>
+            <div><dt>Контракт</dt><dd>EQCXryDnM7I2xqWoM-Kkzr7vLv1bXzwZkYe1L9JtoORJm55N</dd></div>
+          </dl>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <a class="brand" href="#top">
+          <span class="brand-mark"><img src="logo.png" alt="Логотип PaperBoy" /></span>
+          <span>PaperBoy</span>
+        </a>
+        <p>$PAPER — мем-токен без гарантий доходности. Это не финансовый совет: проводите собственное исследование и оценивайте риски самостоятельно.</p>
+        <small>© 2026 PaperBoy. All rights reserved.</small>
+      </div>
+      <nav class="footer-links" aria-label="Ссылки в футере">
+        <a href="#about">О проекте</a>
+        <a href="#tokenomics">Токеномика</a>
+        <a href="#roadmap">Маршрут</a>
+        <a href="#community">Комьюнити</a>
+      </nav>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast">Контракт скопирован</div>
+
+  <script>
+    const copyButton = document.getElementById('copyContract');
+    const contractText = document.getElementById('contractText');
+    const toast = document.getElementById('toast');
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      window.setTimeout(() => toast.classList.remove('show'), 1800);
+    }
+
+    copyButton.addEventListener('click', async () => {
+      const value = contractText.textContent.trim();
+
+      try {
+        await navigator.clipboard.writeText(value);
+        showToast('Контракт скопирован');
+      } catch (error) {
+        showToast('Скопируйте вручную: ' + value);
+      }
+    });
+  </script>
+</body>
+</html>
